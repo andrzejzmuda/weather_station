@@ -1,0 +1,9 @@
+.cache.sqlite
+schemas
+weather_codes.txt
+*.ipynb
+.env
+migrations/
+__pycache__/
+.ipynb_checkpoints/
+env/
