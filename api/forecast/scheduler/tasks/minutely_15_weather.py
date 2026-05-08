@@ -1,7 +1,7 @@
 import pandas as pd
 
 
-def get_15_weather(response):
+def get_15_weather(response, geo_id=1):
     minutely15 = response.Minutely15()
     response_data = {"date": pd.date_range(
         start = pd.to_datetime(minutely15.Time() + response.UtcOffsetSeconds(), unit = "s", utc = True),
@@ -18,5 +18,6 @@ def get_15_weather(response):
     response_data["snowfall_height"] = minutely15.Variables(6).ValuesAsNumpy()
     response_data["sunshine_duration"] = minutely15.Variables(7).ValuesAsNumpy()
     response_data["visibility"] = minutely15.Variables(8).ValuesAsNumpy()
+    response_data["geo_id"] = [geo_id] * len(response_data["date"])
     df_response = pd.DataFrame(data = response_data)
     return df_response

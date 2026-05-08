@@ -1,8 +1,9 @@
 import pandas as pd
 from datetime import datetime
 
-def get_current_weather(response):
+def get_current_weather(response, geo_id=1):
     current_weather = {
+        "geo_id": geo_id,
         "date": datetime.now(),
         "temperature_2m": response.Variables(0).Value(),
         "relative_humidity_2m": response.Variables(1).Value(),

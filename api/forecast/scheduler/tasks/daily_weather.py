@@ -1,7 +1,7 @@
 import pandas as pd
 
 
-def get_daily_weather(response):
+def get_daily_weather(response, geo_id=1):
     daily = response.Daily()
 
     response_data = {"date": pd.date_range(
@@ -36,5 +36,6 @@ def get_daily_weather(response):
     response_data["visibility_max"] = daily.Variables(23).ValuesAsNumpy()
     response_data["visibility_min"] = daily.Variables(24).ValuesAsNumpy()
     response_data["visibility_mean"] = daily.Variables(25).ValuesAsNumpy()
+    response_data["geo_id"] = [geo_id] * len(response_data["date"])
     df_daily_weather = pd.DataFrame(data = response_data)
     return df_daily_weather

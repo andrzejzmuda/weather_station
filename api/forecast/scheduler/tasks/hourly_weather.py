@@ -1,7 +1,7 @@
 import pandas as pd
 
 
-def get_hourly_weather(response):
+def get_hourly_weather(response, geo_id=1):
     hourly = response.Hourly()
 
     response_data = {"date": pd.date_range(
@@ -26,5 +26,6 @@ def get_hourly_weather(response):
     response_data["uv_index"] = hourly.Variables(13).ValuesAsNumpy()
     response_data["uv_index_clear_sky"] = hourly.Variables(14).ValuesAsNumpy()
     response_data["sunshine_duration"] = hourly.Variables(15).ValuesAsNumpy()
+    response_data["geo_id"] = [geo_id] * len(response_data["date"])
     df_hourly_weather = pd.DataFrame(data = response_data)
     return df_hourly_weather

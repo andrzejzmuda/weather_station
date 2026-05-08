@@ -1,8 +1,10 @@
+import pandas as pd
 import openmeteo_requests
 
 import requests_cache
 from retry_requests import retry
 
+from forecast.models import GeoData
 from forecast.scheduler.tasks.geo_data import get_geographic_data
 from forecast.scheduler.tasks.current_weather import get_current_weather
 from forecast.scheduler.tasks.minutely_15_weather import get_15_weather
@@ -63,28 +65,40 @@ def get_geo():
 
 
 def get_current():
-    response = get_weather()
-    df_current = get_current_weather(response.Current())
-    send_weather_to_api(df_current, "currentweather/")
+    frames = []
+    for n in GeoData.objects.all():
+        response = get_weather(n.latitude, n.longitude)
+        df_current = get_current_weather(response.Current(), n.id)
+        frames.append(df_current)
+    send_weather_to_api(pd.concat(frames, ignore_index=True), "currentweather/")
     return "Current weather data sent to API"
 
 
 def get_minutely_15():
-    response = get_weather()
-    df_minutely_15 = get_15_weather(response)
-    send_weather_to_api(df_minutely_15, "minutely15weather/")
+    frames = []
+    for n in GeoData.objects.all():
+        response = get_weather(n.latitude, n.longitude)
+        df_minutely_15 = get_15_weather(response, n.id)
+        frames.append(df_minutely_15)
+    send_weather_to_api(pd.concat(frames, ignore_index=True), "minutely15weather/")
     return "Minutely 15 weather data sent to API"
 
 
 def get_hourly():
-    response = get_weather()
-    df_hourly = get_hourly_weather(response)
-    send_weather_to_api(df_hourly, "hourlyweather/")
+    frames = []
+    for n in GeoData.objects.all():
+        response = get_weather(n.latitude, n.longitude)
+        df_hourly = get_hourly_weather(response, n.id)
+        frames.append(df_hourly)
+    send_weather_to_api(pd.concat(frames, ignore_index=True), "hourlyweather/")
     return "Hourly weather data sent to API"
 
 
 def get_daily():
-    response = get_weather()
-    df_daily = get_daily_weather(response)
-    send_weather_to_api(df_daily, "dailyweather/")
+    frames = []
+    for n in GeoData.objects.all():
+        response = get_weather(n.latitude, n.longitude)
+        df_daily = get_daily_weather(response, n.id)
+        frames.append(df_daily)
+    send_weather_to_api(pd.concat(frames), "dailyweather/")
     return "Daily weather data sent to API"
