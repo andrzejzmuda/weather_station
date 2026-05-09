@@ -47,10 +47,10 @@ def get_weather(latitude=51.19, longitude=16.19):
                         "wind_speed_10m", "rain", "snowfall", "snowfall_height",
                         "sunshine_duration", "visibility"],
         "timezone": "Europe/Berlin",
-        "past_days": 7,
+        "past_days": 0,
         "forecast_days": 7,
         "forecast_minutely_15": 4,
-        "past_minutely_15": 4,
+        "past_minutely_15": 0,
     }
     responses = openmeteo.weather_api(url, params = params)
     response = responses[0]

@@ -12,9 +12,9 @@ class ForecastConfig(AppConfig):
             from forecast.scheduler.get_forecast import (
                 get_current, get_daily, get_hourly, get_minutely_15)
             scheduler = BackgroundScheduler()
-            scheduler.add_job(get_current, 'interval', minutes=30)
-            scheduler.add_job(get_minutely_15, 'interval', minutes=15)
-            scheduler.add_job(get_hourly, 'interval', hours=1)
-            scheduler.add_job(get_daily, 'interval', days=1)
+            scheduler.add_job(get_current, 'interval', minutes=15)
+            scheduler.add_job(get_minutely_15, 'interval', hours=1)
+            scheduler.add_job(get_hourly, 'interval', days=1)
+            scheduler.add_job(get_daily, 'interval', weeks=1)
             scheduler.start()
             self.scheduler_started = True

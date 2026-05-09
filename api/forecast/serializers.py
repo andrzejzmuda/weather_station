@@ -1,4 +1,4 @@
-from .models import (WeatherCodes, GeoData, CurrentWeather,
+from .models import (Cities, WeatherCodes, GeoData, CurrentWeather,
                     Minutely15Weather, HourlyWeather, DailyWeather)
 from rest_framework import serializers
 
@@ -15,6 +15,20 @@ class WeatherCodesSerializer(serializers.HyperlinkedModelSerializer):
             )
         ]
 
+
+class CitiesSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Cities
+        fields = '__all__'
+        validators = [
+            serializers.UniqueTogetherValidator(
+                queryset=Cities.objects.all(),
+                fields=['geo_id', 'name'],
+                message="A City with this name already exists."
+            )
+        ]
+
+
 class GeoDataSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = GeoData
@@ -29,6 +43,8 @@ class GeoDataSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class CurrentWeatherSerializer(serializers.HyperlinkedModelSerializer):
+    geo_city = serializers.CharField(read_only=True)
+    weather_description = serializers.CharField(read_only=True)
     class Meta:
         model = CurrentWeather
         fields = '__all__'

@@ -24,6 +24,7 @@ from forecast import views
 router = routers.DefaultRouter()
 router.register(r'weathercodes', views.WeatherCodesViewSet)
 router.register(r'geodata', views.GeoDataViewSet)
+router.register(r'cities', views.CitiesViewSet)
 router.register(r'currentweather', views.CurrentWeatherViewSet)
 router.register(r'minutely15weather', views.Minutely15WeatherViewSet)
 router.register(r'hourlyweather', views.HourlyWeatherViewSet)
