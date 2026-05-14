@@ -12,6 +12,7 @@ class WeatherCodes(models.Model):
         verbose_name = "WeatherCode"
         verbose_name_plural = "WeatherCodes"
         app_label = "forecast"
+        unique_together = ('code', 'description')
 
 
 class Cities(models.Model):
@@ -25,6 +26,7 @@ class Cities(models.Model):
         verbose_name = "City"
         verbose_name_plural = "Cities"
         app_label = "forecast"
+        unique_together = ('geo_id', 'name')
 
 
 class GeoData(models.Model):
@@ -92,7 +94,7 @@ class Minutely15Weather(models.Model):
         verbose_name = "Minutely15Weather"
         verbose_name_plural = "Minutely15Weather"
         app_label = "forecast"
-
+        unique_together = ('geo_id', 'date')
 
 class HourlyWeather(models.Model):
     geo_id = models.IntegerField(null=False, blank=False, default=1)
@@ -121,6 +123,7 @@ class HourlyWeather(models.Model):
         verbose_name = "HourlyWeather"
         verbose_name_plural = "HourlyWeather"
         app_label = "forecast"
+        unique_together = ('geo_id', 'date')
 
 
 class DailyWeather(models.Model):
@@ -160,3 +163,4 @@ class DailyWeather(models.Model):
         verbose_name = "DailyWeather"
         verbose_name_plural = "DailyWeather"
         app_label = "forecast"
+        unique_together = ('geo_id', 'date')

@@ -51,6 +51,8 @@ class CurrentWeatherSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class Minutely15WeatherSerializer(serializers.ModelSerializer):
+    geo_city = serializers.CharField(read_only=True)
+    weather_description = serializers.CharField(read_only=True)
     class Meta:
         model = Minutely15Weather
         fields = '__all__'
@@ -58,6 +60,8 @@ class Minutely15WeatherSerializer(serializers.ModelSerializer):
 
 
 class HourlyWeatherSerializer(serializers.HyperlinkedModelSerializer):
+    geo_city = serializers.CharField(read_only=True)
+    weather_description = serializers.CharField(read_only=True)
     class Meta:
         model = HourlyWeather
         fields = '__all__'
@@ -65,6 +69,8 @@ class HourlyWeatherSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class DailyWeatherSerializer(serializers.HyperlinkedModelSerializer):
+    geo_city = serializers.CharField(read_only=True)
+    weather_description = serializers.CharField(read_only=True)
     class Meta:
         model = DailyWeather
         fields = '__all__'

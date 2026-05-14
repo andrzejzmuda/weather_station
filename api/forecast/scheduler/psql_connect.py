@@ -1,7 +1,9 @@
 import psycopg2
 import requests
-from dotenv import load_dotenv
+import pandas as pd
 import os
+
+from dotenv import load_dotenv
 
 load_dotenv()
 
@@ -46,7 +48,13 @@ def send_geo_to_api(df):
 
 
 def send_weather_to_api(df, endpoint):
-    df["date"] = df["date"].astype(str)
+    dt_time_cols = df.select_dtypes(include=["datetime64[ns]", "datetime64[ns, UTC]"]).columns
+    df[dt_time_cols] = df[dt_time_cols].astype(str)
+    unix_cols = ["sunrise", "sunset"]
+    for col in unix_cols:
+        if col in df.columns:
+            df[col] = pd.to_datetime(df[col], unit="s", utc=True)\
+                .dt.strftime("%Y-%m-%dT%H:%M:%S%z")
     payload = df.to_dict(orient="records")
 
     headers = {

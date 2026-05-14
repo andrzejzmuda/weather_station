@@ -100,5 +100,5 @@ def get_daily():
         response = get_weather(n.latitude, n.longitude)
         df_daily = get_daily_weather(response, n.id)
         frames.append(df_daily)
-    send_weather_to_api(pd.concat(frames), "dailyweather/")
+    send_weather_to_api(pd.concat(frames, ignore_index=True), "dailyweather/")
     return "Daily weather data sent to API"

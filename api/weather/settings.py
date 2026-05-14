@@ -30,7 +30,10 @@ SECRET_KEY = 'django-insecure-6af*e7dso%gcgb+wxy3_k_kwbw&ww((y#-z6y184g6oaw5=2n5
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",
+    "http://127.0.0.1:3000"
+]
 
 
 # Application definition
@@ -38,6 +41,7 @@ ALLOWED_HOSTS = ['*']
 INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
+    'corsheaders',
     'forecast',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -60,6 +64,7 @@ REST_FRAMEWORK = {
 }
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -100,6 +105,14 @@ DATABASES = {
         'PASSWORD': os.getenv("PASSWORD"),
         'HOST': os.getenv("HOST"),
         'PORT': os.getenv("PORT"),
+    },
+    'rpi': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.getenv("RPI_DATABASE"),
+        'USER': os.getenv("RPI_USER"),
+        'PASSWORD': os.getenv("RPI_PASSWORD"),
+        'HOST': os.getenv("RPI_HOST"),
+        'PORT': os.getenv("RPI_PORT"),
     }
 }
 
