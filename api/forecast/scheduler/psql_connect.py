@@ -3,9 +3,9 @@ import requests
 import pandas as pd
 import os
 
-from dotenv import load_dotenv
+from dotenv import load_dotenv, find_dotenv
 
-load_dotenv()
+load_dotenv(find_dotenv())
 
 def connection():
     try:

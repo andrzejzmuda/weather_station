@@ -1,6 +1,5 @@
 import pandas as pd
 import openmeteo_requests
-
 import requests_cache
 from retry_requests import retry
 
@@ -12,7 +11,6 @@ from forecast.scheduler.tasks.hourly_weather import get_hourly_weather
 from forecast.scheduler.tasks.daily_weather import get_daily_weather
 from forecast.scheduler.psql_connect import (send_geo_to_api,
                                                 send_weather_to_api)
-
 
 def get_weather(latitude=51.19, longitude=16.19):
     cache_session = requests_cache.CachedSession('.cache', expire_after = 3600)

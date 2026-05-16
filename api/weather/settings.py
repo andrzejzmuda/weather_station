@@ -25,7 +25,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-6af*e7dso%gcgb+wxy3_k_kwbw&ww((y#-z6y184g6oaw5=2n5'
+SECRET_KEY = os.getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -100,19 +100,19 @@ WSGI_APPLICATION = 'weather.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv("DATABASE"),
-        'USER': os.getenv("USER"),
-        'PASSWORD': os.getenv("PASSWORD"),
-        'HOST': os.getenv("HOST"),
-        'PORT': os.getenv("PORT"),
-    },
-    'rpi': {
-        'ENGINE': 'django.db.backends.postgresql',
         'NAME': os.getenv("RPI_DATABASE"),
         'USER': os.getenv("RPI_USER"),
         'PASSWORD': os.getenv("RPI_PASSWORD"),
         'HOST': os.getenv("RPI_HOST"),
         'PORT': os.getenv("RPI_PORT"),
+    },
+    'local': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.getenv("DATABASE"),
+        'USER': os.getenv("USER"),
+        'PASSWORD': os.getenv("PASSWORD"),
+        'HOST': os.getenv("HOST"),
+        'PORT': os.getenv("PORT"),
     }
 }
 
