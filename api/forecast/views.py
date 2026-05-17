@@ -48,7 +48,7 @@ class GeoDataViewSet(viewsets.ModelViewSet):
 
 
 class CurrentWeatherViewSet(viewsets.ModelViewSet):
-    queryset = CurrentWeather.objects.all()
+    queryset = CurrentWeather.objects.all().order_by("-id")
     serializer_class = CurrentWeatherSerializer
     permission_classes = [permissions.IsAuthenticated]
 
@@ -99,7 +99,7 @@ class CurrentWeatherViewSet(viewsets.ModelViewSet):
 
 
 class Minutely15WeatherViewSet(viewsets.ModelViewSet):
-    queryset = Minutely15Weather.objects.all()
+    queryset = Minutely15Weather.objects.all().order_by("-id")
     serializer_class = Minutely15WeatherSerializer
     permission_classes = [permissions.IsAuthenticated]
 
@@ -138,7 +138,7 @@ class Minutely15WeatherViewSet(viewsets.ModelViewSet):
 
 
 class HourlyWeatherViewSet(viewsets.ModelViewSet):
-    queryset = HourlyWeather.objects.all()
+    queryset = HourlyWeather.objects.all().order_by("-id")
     serializer_class = HourlyWeatherSerializer
     permission_classes = [permissions.IsAuthenticated]
 
@@ -177,7 +177,7 @@ class HourlyWeatherViewSet(viewsets.ModelViewSet):
 
 
 class DailyWeatherViewSet(viewsets.ModelViewSet):
-    queryset = DailyWeather.objects.all()
+    queryset = DailyWeather.objects.all().order_by("-id")
     serializer_class = DailyWeatherSerializer
     permission_classes = [permissions.IsAuthenticated]
 

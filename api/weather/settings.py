@@ -13,12 +13,25 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 from pathlib import Path
 
 from dotenv import load_dotenv
+from logging.handlers import TimedRotatingFileHandler
 import os
+from datetime import date
 
 load_dotenv()
 
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+# Logs configuration
+LOGS_DIR = BASE_DIR / "logs"
+LOGS_DIR.mkdir(exist_ok=True)
+
+WEATHER_LOG_DIR = LOGS_DIR / "weather"
+WEATHER_LOG_DIR.mkdir(exist_ok=True)
+
+TODAY = date.today()
+WEATHER_LOG_FILE = WEATHER_LOG_DIR / f"{TODAY}.log"
 
 
 # Quick-start development settings - unsuitable for production
@@ -32,7 +45,8 @@ DEBUG = True
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
-    "http://127.0.0.1:3000"
+    "http://127.0.0.1:3000",
+    "http://192.168.1.114:3000",
 ]
 
 
@@ -134,6 +148,34 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "standard": {
+            "format": "%(asctime)s [%(levelname)s] %(name)s: %(message)s"
+        },
+    },
+    "handlers": {
+        "weather_file": {
+            "class": "logging.handlers.TimedRotatingFileHandler",
+            "filename": str(WEATHER_LOG_DIR / "weather.log"),
+            "when": "midnight",
+            "interval": 1,
+            "backupCount": 30,
+            "formatter": "standard",
+            "level": "INFO",
+        },
+    },
+    "loggers": {
+        "weather": {
+            "handlers": ["weather_file"],
+            "level": "INFO",
+            "propagate": False,
+        },
+    },
+}
 
 
 # Internationalization

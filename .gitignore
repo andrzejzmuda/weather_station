@@ -2,8 +2,10 @@
 schemas
 weather_codes.txt
 *.ipynb
-.env
+*.env
+*.log
 migrations/
 __pycache__/
 .ipynb_checkpoints/
 env/
+logs/

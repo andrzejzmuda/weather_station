@@ -2,10 +2,14 @@ import psycopg2
 import requests
 import pandas as pd
 import os
+import logging
+from datetime import datetime
 
 from dotenv import load_dotenv, find_dotenv
 
 load_dotenv(find_dotenv())
+logger = logging.getLogger("weather")
+
 
 def connection():
     try:
@@ -20,7 +24,7 @@ def connection():
         cursor = conn.cursor()
         return cursor
     except Exception as e:
-        print(f"Error occurred while connecting to database: {e}")
+        logger.info(f"Error occurred while connecting to database: {e}")
         return None
 
 
@@ -44,6 +48,12 @@ def send_geo_to_api(df):
     }
 
     response = requests.post(url, json=payload, headers=headers)
+    logger.info(f"Saving Geo Data...")
+    logger.info(f"datetime: {datetime.now()}")
+    logger.info(f"STATUS: {response.status_code}")
+    logger.info(f"RESPONSE: {response.text}")
+    logger.info(f"Finished saving Geo Data.")
+    logger.info(f"*****************************")
     return response.status_code, response.text
 
 
@@ -64,4 +74,10 @@ def send_weather_to_api(df, endpoint):
     }
     url = os.getenv("URL") + endpoint
     response = requests.post(url, json=payload, headers=headers)
+    logger.info(f"Saving Weather Data...")
+    logger.info(f"{endpoint}: datetime: {datetime.now()}")
+    logger.info(f"STATUS: {response.status_code}")
+    logger.info(f"RESPONSE: {response.text}")
+    logger.info(f"Finished saving Weather Data.")
+    logger.info(f"*****************************")
     return response.status_code, response.text
