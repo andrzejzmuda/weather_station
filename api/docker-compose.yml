@@ -13,3 +13,13 @@ services:
       - "8000:8000"
     environment:
       - PYTHONUNBUFFERED=1
+
+  nginx:
+    build: ./nginx
+    container_name: weather_nginx
+    ports:
+      - "80:80"
+    depends_on:
+      - django
+    volumes:
+      - /home/pi/weather_logs:/app/logs
