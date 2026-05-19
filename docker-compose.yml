@@ -2,12 +2,12 @@ version: "3.9"
 
 services:
   django:
-    build: ./back
+    build: ./api
     container_name: weather_backend
     env_file:
       - .env
     volumes:
-      - ./back:/app:rw
+      - ./api:/app:rw
       - /home/pi/weather_logs:/app/logs:rw
     ports:
       - "8000:8000"
