@@ -1,4 +1,3 @@
-import psycopg2
 import requests
 import pandas as pd
 import os
@@ -9,23 +8,6 @@ from dotenv import load_dotenv, find_dotenv
 
 load_dotenv(find_dotenv())
 logger = logging.getLogger("weather")
-
-
-def connection():
-    try:
-        conn = psycopg2.connect(
-            host=os.getenv("HOST"),
-            database=os.getenv("DATABASE"),
-            user=os.getenv("USER"),
-            password=os.getenv("PASSWORD"),
-            port=os.getenv("PORT")
-        )
-        conn.autocommit = True
-        cursor = conn.cursor()
-        return cursor
-    except Exception as e:
-        logger.info(f"Error occurred while connecting to database: {e}")
-        return None
 
 
 def clean_bytes(obj):
@@ -51,7 +33,6 @@ def send_geo_to_api(df):
     logger.info(f"Saving Geo Data...")
     logger.info(f"datetime: {datetime.now()}")
     logger.info(f"STATUS: {response.status_code}")
-    logger.info(f"RESPONSE: {response.text}")
     logger.info(f"Finished saving Geo Data.")
     logger.info(f"*****************************")
     return response.status_code, response.text
@@ -77,7 +58,6 @@ def send_weather_to_api(df, endpoint):
     logger.info(f"Saving Weather Data...")
     logger.info(f"{endpoint}: datetime: {datetime.now()}")
     logger.info(f"STATUS: {response.status_code}")
-    logger.info(f"RESPONSE: {response.text}")
     logger.info(f"Finished saving Weather Data.")
     logger.info(f"*****************************")
     return response.status_code, response.text

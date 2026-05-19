@@ -1,0 +1,15 @@
+version: "3.9"
+
+services:
+  django:
+    build: ./back
+    container_name: weather_backend
+    env_file:
+      - .env
+    volumes:
+      - ./back:/app:rw
+      - /home/pi/weather_logs:/app/logs:rw
+    ports:
+      - "8000:8000"
+    environment:
+      - PYTHONUNBUFFERED=1

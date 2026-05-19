@@ -166,6 +166,7 @@ LOGGING = {
             "backupCount": 30,
             "formatter": "standard",
             "level": "INFO",
+            "delay": True,
         },
     },
     "loggers": {
