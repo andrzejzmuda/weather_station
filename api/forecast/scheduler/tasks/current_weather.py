@@ -1,24 +1,31 @@
-import pandas as pd
-from datetime import datetime
+import pandas_lite as pd
+from datetime import datetime, timezone
+
 
 def get_current_weather(response, geo_id=1):
-    current_weather = {
-        "geo_id": geo_id,
-        "date": datetime.now(),
-        "temperature_2m": response.Variables(0).Value(),
-        "relative_humidity_2m": response.Variables(1).Value(),
-        "apparent_temperature": response.Variables(2).Value(),
-        "precipitation": response.Variables(3).Value(),
-        "rain": response.Variables(4).Value(),
-        "showers": response.Variables(5).Value(),
-        "snowfall": response.Variables(6).Value(),
-        "wind_speed_10m": response.Variables(7).Value(),
-        "wind_direction_10m": response.Variables(8).Value(),
-        "wind_gusts_10m": response.Variables(9).Value(),
-        "surface_pressure": response.Variables(10).Value(),
-        "cloud_cover": response.Variables(11).Value(),
-        "weather_code": response.Variables(12).Value(),
-        "is_day": response.Variables(13).Value()
+    now = datetime.now(timezone.utc).isoformat()
+
+    def val(i):
+        v = response.Variables(i).Value()
+        return float(v) if v is not None else None
+
+    data = {
+        "geo_id": [int(geo_id)],
+        "date": [now],
+        "temperature_2m": [val(0)],
+        "relative_humidity_2m": [val(1)],
+        "apparent_temperature": [val(2)],
+        "precipitation": [val(3)],
+        "rain": [val(4)],
+        "showers": [val(5)],
+        "snowfall": [val(6)],
+        "wind_speed_10m": [val(7)],
+        "wind_direction_10m": [val(8)],
+        "wind_gusts_10m": [val(9)],
+        "surface_pressure": [val(10)],
+        "cloud_cover": [val(11)],
+        "weather_code": [int(val(12))],
+        "is_day": [int(val(13))]
     }
-    df_current = pd.DataFrame([current_weather])
-    return df_current
+
+    return pd.DataFrame(data)

@@ -1,4 +1,4 @@
-import pandas as pd
+import pandas_lite as pd
 
 
 def get_geographic_data(response):

@@ -119,14 +119,6 @@ DATABASES = {
         'PASSWORD': os.getenv("RPI_PASSWORD"),
         'HOST': os.getenv("RPI_HOST"),
         'PORT': os.getenv("RPI_PORT"),
-    },
-    'local': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv("DATABASE"),
-        'USER': os.getenv("USER"),
-        'PASSWORD': os.getenv("PASSWORD"),
-        'HOST': os.getenv("HOST"),
-        'PORT': os.getenv("PORT"),
     }
 }
 
@@ -184,7 +176,7 @@ LOGGING = {
 
 LANGUAGE_CODE = 'pl'
 
-TIME_ZONE = 'CET'
+TIME_ZONE = 'Europe/Warsaw'
 
 USE_I18N = True
 
@@ -194,4 +186,5 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'

@@ -2,24 +2,30 @@ version: "3.9"
 
 services:
   django:
-    build: ./api
+    build:
+      context: .
+      dockerfile: Dockerfile
     container_name: weather_backend
+    command: gunicorn weather.wsgi:application --bind 0.0.0.0:8000
+    volumes:
+      - .:/app
+      - static_volume:/app/staticfiles
     env_file:
       - .env
-    volumes:
-      - ./api:/app:rw
-      - /home/pi/weather_logs:/app/logs:rw
-    ports:
-      - "8000:8000"
-    environment:
-      - PYTHONUNBUFFERED=1
+    expose:
+      - "8000"
 
   nginx:
-    build: ./nginx
+    build:
+      context: ../nginx
+      dockerfile: Dockerfile
     container_name: weather_nginx
     ports:
       - "80:80"
+    volumes:
+      - static_volume:/app/staticfiles
     depends_on:
       - django
-    volumes:
-      - /home/pi/weather_logs:/app/logs
+
+volumes:
+  static_volume:
