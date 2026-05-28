@@ -48,7 +48,7 @@ class GeoDataViewSet(viewsets.ModelViewSet):
 
 
 class CurrentWeatherViewSet(viewsets.ModelViewSet):
-    queryset = CurrentWeather.objects.all().order_by("-id")
+    queryset = CurrentWeather.objects.all().order_by("id")
     serializer_class = CurrentWeatherSerializer
     permission_classes = [permissions.IsAuthenticated]
 
@@ -77,25 +77,6 @@ class CurrentWeatherViewSet(viewsets.ModelViewSet):
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
-
-    # def create(self, request, *args, **kwargs):
-    #     data = request.data
-    #     if not isinstance(data, list):
-    #         data = [data]
-    #     updated = []
-    #     for item in data:
-    #         if "date" in item:
-    #             item["weather_timestamp"] = item.pop("date")
-    #         obj, created = CurrentWeather.objects.update_or_create(
-    #             geo_id=item["geo_id"],
-    #             weather_timestamp=make_aware(datetime.fromisoformat(
-    #                 item["weather_timestamp"]
-    #                 )),
-    #             defaults=item
-    #         )
-    #         updated.append(obj)
-    #     serializer = self.get_serializer(updated, many=True)
-    #     return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class Minutely15WeatherViewSet(viewsets.ModelViewSet):
@@ -157,7 +138,7 @@ class HourlyWeatherViewSet(viewsets.ModelViewSet):
                 ).values("description")[:1]
             )
         )
-        qs = qs.order_by("id")[:6]
+        qs = qs.order_by("id")
         return qs
 
     def create(self, request, *args, **kwargs):

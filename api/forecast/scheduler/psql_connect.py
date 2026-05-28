@@ -33,36 +33,43 @@ def send_geo_to_api(df):
 
 
 def send_weather_to_api(df, endpoint):
-    for col in df.columns:
-        if len(df[:, col]) > 0 and isinstance(df[0, col], datetime):
-            df[col] = [df[i, col].isoformat() for i in range(len(df[:, col]))]
     unix_cols = ["sunrise", "sunset"]
+
+    # konwersja unix → iso
     for col in unix_cols:
         if col in df.columns:
-            df[col] = [
-                datetime.fromtimestamp(int(df[i, col]), tz=timezone.utc).isoformat()
-                if df[i, col] is not None else None
-                for i in range(len(df[:, col]))
-            ]
+            col_index = df.columns.index(col)
+            for row in df.values:
+                val = row[col_index]
+                if val not in (None, ""):
+                    row[col_index] = datetime.fromtimestamp(
+                        int(val), tz=timezone.utc
+                    ).isoformat()
+                else:
+                    row[col_index] = None
 
+    # budowanie payload
     payload = []
-    rows = len(df[:, df.columns[0]])
-    for i in range(rows):
-        row = {}
-        for col in df.columns:
-            row[col] = clean_value(df[i, col])
-        payload.append(row)
+    columns = df.columns
+    for row in df.values:
+        record = {}
+        for i, col in enumerate(columns):
+            record[col] = clean_value(row[i])
+        payload.append(record)
 
     headers = {
         "Authorization": f"Token {os.getenv('API_TOKEN')}",
         "Content-Type": "application/json",
         "Accept": "application/json"
     }
+
     url = os.getenv("URL") + endpoint
     response = requests.post(url, json=payload, headers=headers)
+
     logger.info(f"Saving Weather Data...")
     logger.info(f"{endpoint}: datetime: {datetime.now()}")
     logger.info(f"STATUS: {response.status_code}")
     logger.info(f"Finished saving Weather Data.")
     logger.info(f"*****************************")
+
     return response.status_code, response.text
