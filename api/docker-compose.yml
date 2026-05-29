@@ -24,6 +24,7 @@ services:
       - "80:80"
     volumes:
       - static_volume:/app/staticfiles
+      - /home/admin/weather_logs:/app/api/logs/weather
     depends_on:
       - django
 
