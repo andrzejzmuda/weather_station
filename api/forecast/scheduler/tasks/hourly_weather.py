@@ -30,6 +30,10 @@ def get_hourly_weather(response, geo_id=1):
         "uv_index": hourly.Variables(13).ValuesAsNumpy().tolist(),
         "uv_index_clear_sky": hourly.Variables(14).ValuesAsNumpy().tolist(),
         "sunshine_duration": hourly.Variables(15).ValuesAsNumpy().tolist(),
+        "cloud_cover": hourly.Variables(16).ValuesAsNumpy().tolist(),
+        "cloud_cover_low": hourly.Variables(17).ValuesAsNumpy().tolist(),
+        "wind_direction_10m": hourly.Variables(18).ValuesAsNumpy().tolist(),
+        "freezing_level_height": hourly.Variables(19).ValuesAsNumpy().tolist(),
         "geo_id": [geo_id] * len(dates)
     }
     cleaned = {str(k): v for k, v in response_data.items()}

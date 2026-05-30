@@ -24,11 +24,11 @@ load_dotenv()
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Logs configuration
-LOGS_DIR = BASE_DIR / "logs"
-LOGS_DIR.mkdir(exist_ok=True)
+LOGS_DIR = BASE_DIR / "api" / "logs"
+LOGS_DIR.mkdir(parents=True, exist_ok=True)
 
 WEATHER_LOG_DIR = LOGS_DIR / "weather"
-WEATHER_LOG_DIR.mkdir(exist_ok=True)
+WEATHER_LOG_DIR.mkdir(parents=True, exist_ok=True)
 
 TODAY = date.today()
 WEATHER_LOG_FILE = WEATHER_LOG_DIR / f"{TODAY}.log"

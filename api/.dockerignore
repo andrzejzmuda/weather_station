@@ -1,0 +1,4 @@
+*.ipynb
+
+requirements_dev.txt
+requirements_win.txt

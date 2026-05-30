@@ -66,7 +66,7 @@ class CurrentWeather(models.Model):
     is_day = models.FloatField(null=True, blank=True)
 
     def __str__(self):
-        return f"Weather #{self.weather_timestamp}"
+        return f"Weather #{self.geo_id} - {self.weather_timestamp}"
 
     class Meta:
         verbose_name = "CurrentWeather"
@@ -86,15 +86,21 @@ class Minutely15Weather(models.Model):
     snowfall_height = models.FloatField(null=True, blank=True)
     sunshine_duration = models.FloatField(null=True, blank=True)
     visibility = models.FloatField(null=True, blank=True)
+    showers = models.FloatField(null=True, blank=True)
+    precipitation = models.FloatField(null=True, blank=True)
+    wind_speed_10m = models.FloatField(null=True, blank=True)
+    wind_direction_10m = models.FloatField(null=True, blank=True)
+    wind_gusts_10m = models.FloatField(null=True, blank=True)
 
     def __str__(self):
-        return f"Minutely15 Weather #{self.date}"
+        return f"Minutely15 Weather #{self.geo_id} - {self.date}"
 
     class Meta:
         verbose_name = "Minutely15Weather"
         verbose_name_plural = "Minutely15Weather"
         app_label = "forecast"
         unique_together = ('geo_id', 'date')
+
 
 class HourlyWeather(models.Model):
     geo_id = models.IntegerField(null=False, blank=False, default=1)
@@ -115,9 +121,13 @@ class HourlyWeather(models.Model):
     uv_index = models.FloatField(null=True, blank=True)
     uv_index_clear_sky = models.FloatField(null=True, blank=True)
     sunshine_duration = models.FloatField(null=True, blank=True)
+    cloud_cover = models.FloatField(null=True, blank=True)
+    cloud_cover_low = models.FloatField(null=True, blank=True)
+    wind_direction_10m = models.FloatField(null=True, blank=True)
+    freezing_level_height = models.FloatField(null=True, blank=True)
 
     def __str__(self):
-        return f"Hourly Weather #{self.date}"
+        return f"Hourly Weather #{self.geo_id} - {self.date}"
 
     class Meta:
         verbose_name = "HourlyWeather"
@@ -157,7 +167,7 @@ class DailyWeather(models.Model):
     visibility_mean = models.FloatField(null=True, blank=True)
 
     def __str__(self):
-        return f"Daily Weather #{self.date}"
+        return f"Daily Weather #{self.geo_id} - {self.date}"
 
     class Meta:
         verbose_name = "DailyWeather"
