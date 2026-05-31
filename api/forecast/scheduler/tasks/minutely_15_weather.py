@@ -1,6 +1,6 @@
 import pandas_lite as pd
 
-from forecast.scheduler.auxiliaries import generate_date_range, to_list
+from forecast.scheduler.auxiliaries import generate_date_range
 
 
 def get_15_weather(response, geo_id=1):

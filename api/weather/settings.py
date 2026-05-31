@@ -24,7 +24,7 @@ load_dotenv()
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Logs configuration
-LOGS_DIR = BASE_DIR / "api" / "logs"
+LOGS_DIR = BASE_DIR / "app" / "logs"
 LOGS_DIR.mkdir(parents=True, exist_ok=True)
 
 WEATHER_LOG_DIR = LOGS_DIR / "weather"
@@ -44,12 +44,9 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 DEBUG = os.getenv("DEBUG", "False") == "True"
 
 
-# CORS_ALLOWED_ORIGINS = [
-#     "http://localhost:3000",
-#     "http://127.0.0.1:3000",
-#     "http://192.168.1.114:3000",
-#     "http://192.168.1.125"
-# ]
+CORS_ALLOWED_ORIGINS = os.getenv("CORS_ALLOWED_HOSTS").split(",")
+
+CORS_ALLOW_CREDENTIALS = True
 
 ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "127.0.0.1,localhost").split(",")
 

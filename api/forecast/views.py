@@ -53,18 +53,20 @@ class CurrentWeatherViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        latest = CurrentWeather.objects.filter(
+        geo_id = self.request.query_params.get("geo_id")
+        base_qs = CurrentWeather.objects.all()
+        if geo_id:
+            base_qs = base_qs.filter(geo_id=geo_id)
+        latest = base_qs.filter(
             geo_id=OuterRef("geo_id")
         ).order_by("-weather_timestamp")
-        qs = CurrentWeather.objects.filter(
+        qs = base_qs.filter(
             id=Subquery(latest.values("id")[:1])
         )
         qs = qs.annotate(
             geo_city=Subquery(
                 Cities.objects.filter(id=OuterRef("geo_id")).values("name")[:1]
-            )
-        )
-        qs = qs.annotate(
+            ),
             weather_description=Subquery(
                 WeatherCodes.objects.filter(code=OuterRef("weather_code")).values("description")[:1]
             )
@@ -88,8 +90,7 @@ class Minutely15WeatherViewSet(viewsets.ModelViewSet):
         qs = Minutely15Weather.objects.all()
         geo_id = self.request.query_params.get("geo_id")
         if geo_id:
-            qs = qs.filter(Q(geo_id=geo_id), Q(date__gt=timezone.now()))
-        qs = qs.order_by("-id")[:4]
+            qs = qs.filter(geo_id=geo_id)
         qs = qs.annotate(
             geo_city=Subquery(
                 Cities.objects.filter(id=OuterRef("geo_id")).values("name")[:1]
@@ -100,7 +101,8 @@ class Minutely15WeatherViewSet(viewsets.ModelViewSet):
                 ).values("description")[:1]
             )
         )
-        return qs
+
+        return qs.order_by("-id")[:4]
 
     def create(self, request, *args, **kwargs):
         data = request.data
@@ -166,7 +168,7 @@ class DailyWeatherViewSet(viewsets.ModelViewSet):
         qs = DailyWeather.objects.all()
         geo_id = self.request.query_params.get("geo_id")
         if geo_id:
-            qs = qs.filter(geo_id=geo_id)
+            qs = qs.filter(Q(geo_id=geo_id), Q(date__gt=timezone.now()))
         qs = qs.annotate(
             geo_city=Subquery(
                 Cities.objects.filter(id=OuterRef("geo_id")).values("name")[:1]
