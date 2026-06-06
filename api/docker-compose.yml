@@ -10,7 +10,7 @@ services:
     volumes:
       - .:/app
       - static_volume:/app/staticfiles
-      - /home/admin/weather_logs:/app/logs/weather
+      - /home/admin/weather_logs:/logs/weather
     env_file:
       - .env
     expose:

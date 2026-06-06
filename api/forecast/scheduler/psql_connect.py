@@ -2,8 +2,12 @@ import requests
 import os
 import logging
 from datetime import datetime, timezone
+from pandas_lite import DataFrame
 
-from forecast.scheduler.auxiliaries import clean_value
+from forecast.scheduler.auxiliaries import (
+    clean_value, dataframe_to_dict, normalize_and_fill,
+    dict_to_records
+)
 from dotenv import load_dotenv, find_dotenv
 
 load_dotenv(find_dotenv())
@@ -32,30 +36,24 @@ def send_geo_to_api(df):
     return response.status_code, response.text
 
 
-def send_weather_to_api(df, endpoint):
-    unix_cols = ["sunrise", "sunset"]
+def send_weather_to_api(data, endpoint):
+    if isinstance(data, DataFrame):
+        data = dataframe_to_dict(data)
+    elif not isinstance(data, dict):
+        raise TypeError("send_weather_to_api() expects dict or pandas_lite.DataFrame")
+    data = normalize_and_fill(data)
+    data = dict_to_records(data)
+    unix_cols = {"sunrise", "sunset"}
 
-    # konwersja unix → iso
-    for col in unix_cols:
-        if col in df.columns:
-            col_index = df.columns.index(col)
-            for row in df.values:
-                val = row[col_index]
-                if val not in (None, ""):
-                    row[col_index] = datetime.fromtimestamp(
-                        int(val), tz=timezone.utc
-                    ).isoformat()
-                else:
-                    row[col_index] = None
-
-    # budowanie payload
-    payload = []
-    columns = df.columns
-    for row in df.values:
-        record = {}
-        for i, col in enumerate(columns):
-            record[col] = clean_value(row[i])
-        payload.append(record)
+    for rec in data:
+        for key, val in rec.items():
+            if hasattr(val, "item"):
+                val = val.item()
+            if hasattr(val, "isoformat"):
+                val = val.isoformat()
+            if key in unix_cols and isinstance(val, (int, float)):
+                val = datetime.fromtimestamp(val, tz=timezone.utc).isoformat()
+            rec[key] = val
 
     headers = {
         "Authorization": f"Token {os.getenv('API_TOKEN')}",
@@ -64,12 +62,14 @@ def send_weather_to_api(df, endpoint):
     }
 
     url = os.getenv("URL") + endpoint
-    response = requests.post(url, json=payload, headers=headers)
+    response = requests.post(url, json=data, headers=headers)
+    with open("last_sent.json", "w") as f:
+        import json
+        json.dump(data, f, indent=2)
 
     logger.info(f"Saving Weather Data...")
     logger.info(f"{endpoint}: datetime: {datetime.now()}")
     logger.info(f"STATUS: {response.status_code}")
     logger.info(f"Finished saving Weather Data.")
     logger.info(f"*****************************")
-
     return response.status_code, response.text

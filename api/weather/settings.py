@@ -24,7 +24,7 @@ load_dotenv()
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Logs configuration
-LOGS_DIR = BASE_DIR / "app" / "logs"
+LOGS_DIR = BASE_DIR / "logs"
 LOGS_DIR.mkdir(parents=True, exist_ok=True)
 
 WEATHER_LOG_DIR = LOGS_DIR / "weather"
