@@ -1,6 +1,7 @@
 .cache.sqlite
 schemas
 weather_codes.txt
+last_sent.json
 *.ipynb
 *.env
 *.log

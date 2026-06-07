@@ -82,15 +82,17 @@ class CurrentWeatherViewSet(viewsets.ModelViewSet):
 
 
 class Minutely15WeatherViewSet(viewsets.ModelViewSet):
-    queryset = Minutely15Weather.objects.all().order_by("id")
+    queryset = Minutely15Weather.objects.all().order_by("-id")
     serializer_class = Minutely15WeatherSerializer
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        qs = Minutely15Weather.objects.all()
         geo_id = self.request.query_params.get("geo_id")
+        base_qs = Minutely15Weather.objects.all()
         if geo_id:
-            qs = qs.filter(geo_id=geo_id)
+            base_qs = base_qs.filter(geo_id=geo_id)
+        latest_six = base_qs.order_by("-date")[:6]
+        qs = Minutely15Weather.objects.filter(id__in=latest_six).order_by("date")
         qs = qs.annotate(
             geo_city=Subquery(
                 Cities.objects.filter(id=OuterRef("geo_id")).values("name")[:1]
@@ -101,8 +103,7 @@ class Minutely15WeatherViewSet(viewsets.ModelViewSet):
                 ).values("description")[:1]
             )
         )
-
-        return qs.order_by("id")[:4]
+        return qs
 
     def create(self, request, *args, **kwargs):
         data = request.data
