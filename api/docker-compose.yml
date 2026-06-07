@@ -6,6 +6,7 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: weather_backend
+    restart: always
     command: gunicorn weather.wsgi:application --bind 0.0.0.0:8000
     volumes:
       - .:/app
@@ -21,6 +22,7 @@ services:
       context: ../nginx
       dockerfile: Dockerfile
     container_name: weather_nginx
+    restart: always
     ports:
       - "80:80"
     volumes:
