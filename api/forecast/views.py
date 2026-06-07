@@ -82,7 +82,7 @@ class CurrentWeatherViewSet(viewsets.ModelViewSet):
 
 
 class Minutely15WeatherViewSet(viewsets.ModelViewSet):
-    queryset = Minutely15Weather.objects.all().order_by("-id")
+    queryset = Minutely15Weather.objects.all().order_by("id")
     serializer_class = Minutely15WeatherSerializer
     permission_classes = [permissions.IsAuthenticated]
 
@@ -102,7 +102,7 @@ class Minutely15WeatherViewSet(viewsets.ModelViewSet):
             )
         )
 
-        return qs.order_by("-id")[:4]
+        return qs.order_by("id")[:4]
 
     def create(self, request, *args, **kwargs):
         data = request.data
@@ -121,7 +121,7 @@ class Minutely15WeatherViewSet(viewsets.ModelViewSet):
 
 
 class HourlyWeatherViewSet(viewsets.ModelViewSet):
-    queryset = HourlyWeather.objects.all().order_by("-id")
+    queryset = HourlyWeather.objects.all().order_by("id")
     serializer_class = HourlyWeatherSerializer
     permission_classes = [permissions.IsAuthenticated]
 
@@ -160,7 +160,7 @@ class HourlyWeatherViewSet(viewsets.ModelViewSet):
 
 
 class DailyWeatherViewSet(viewsets.ModelViewSet):
-    queryset = DailyWeather.objects.all().order_by("-id")
+    queryset = DailyWeather.objects.all().order_by("id")
     serializer_class = DailyWeatherSerializer
     permission_classes = [permissions.IsAuthenticated]
 
@@ -179,7 +179,7 @@ class DailyWeatherViewSet(viewsets.ModelViewSet):
                 ).values("description")[:1]
             )
         )
-        qs = qs.order_by("-id")[:6]
+        qs = qs.order_by("id")[:6]
         return qs
 
     def create(self, request, *args, **kwargs):
