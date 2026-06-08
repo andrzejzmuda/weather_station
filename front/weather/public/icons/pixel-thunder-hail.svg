@@ -1,0 +1,15 @@
+<svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+  <rect width="16" height="16" fill="#000000"/>
+  <!-- chmura -->
+  <rect x="4" y="4" width="8" height="3" fill="#6FC3DF"/>
+  <rect x="5" y="3" width="6" height="2" fill="#6FC3DF"/>
+  <rect x="7" y="2" width="3" height="1" fill="#6FC3DF"/>
+  <!-- błyskawica -->
+  <rect x="8" y="7" width="2" height="2" fill="#F2E85C"/>
+  <rect x="7" y="9" width="2" height="2" fill="#F2E85C"/>
+  <rect x="8" y="11" width="2" height="2" fill="#F2E85C"/>
+  <!-- grad -->
+  <rect x="5" y="11" width="1" height="1" fill="#FFFFFF"/>
+  <rect x="11" y="11" width="1" height="1" fill="#FFFFFF"/>
+  <rect x="7" y="13" width="1" height="1" fill="#FFFFFF"/>
+</svg>
