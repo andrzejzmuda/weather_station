@@ -17,7 +17,7 @@ logs/
 # frontend
 
 # dependencies
-/node_modules
+node_modules/
 /.pnp
 .pnp.*
 .yarn/*
@@ -30,7 +30,7 @@ logs/
 /coverage
 
 # next.js
-/.next/
+.next/
 /out/
 
 # production
