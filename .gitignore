@@ -9,6 +9,7 @@ last_sent.json
 migrations/
 __pycache__/
 .ipynb_checkpoints/
+docker_rpi_settings/
 env/
 env_docker/
 logs/

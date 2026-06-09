@@ -3,3 +3,5 @@
 last_sent.json
 requirements_dev.txt
 requirements_win.txt
+
+docker_rpi_settings/
