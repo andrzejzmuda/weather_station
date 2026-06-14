@@ -33,6 +33,23 @@ export default function MinutelyWeather({ minutely }: { minutely: any[] }) {
     scrollRef.current!.scrollLeft = scrollLeft - walk;
   }
 
+  function handleTouchStart(e: React.TouchEvent) {
+    setIsDown(true);
+    setStartX(e.touches[0].pageX - scrollRef.current!.offsetLeft);
+    setScrollLeft(scrollRef.current!.scrollLeft);
+  }
+
+  function handleTouchMove(e: React.TouchEvent) {
+    if (!isDown) return;
+    const x = e.touches[0].pageX - scrollRef.current!.offsetLeft;
+    const walk = (x - startX) * 1.2;
+    scrollRef.current!.scrollLeft = scrollLeft - walk;
+  }
+
+  function handleTouchEnd() {
+    setIsDown(false);
+  }
+
   return (
     <div className="w-full flex justify-center mt-6">
       <div
@@ -42,6 +59,9 @@ export default function MinutelyWeather({ minutely }: { minutely: any[] }) {
         onMouseLeave={handleMouseLeave}
         onMouseUp={handleMouseUp}
         onMouseMove={handleMouseMove}
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
       >
         <div className="inline-flex gap-3 w-max pr-3">
           {minutely.map((m, index) => {
@@ -69,8 +89,12 @@ export default function MinutelyWeather({ minutely }: { minutely: any[] }) {
                 <div className="font-pixel text-[10px] space-y-1 leading-tight">
                   <p>TEMP: <span className="text-[9px] text-atari-cyan">{roundToOneDecimal(m.temperature_2m)}°C</span></p>
                   <p>HUMID: <span className="text-[9px] text-atari-yellow">{m.relative_humidity_2m}%</span></p>
-                  <p>RAIN: <span className="text-[9px] text-atari-cyan">{roundToOneDecimal(m.rain)} mm</span></p>
-                  <p>SNOW: <span className="text-[9px] text-atari-cyan">{roundToOneDecimal(m.snowfall)} mm</span></p>
+                  {m.rain > 0 && (
+                    <p>RAIN: <span className="text-[9px] text-atari-cyan">{roundToOneDecimal(m.rain)} mm</span></p>
+                  )}
+                  {m.snowfall > 0 && (
+                    <p>SNOW: <span className="text-[9px] text-atari-cyan">{roundToOneDecimal(m.snowfall)} mm</span></p>
+                  )}
                 </div>
               </div>
             );

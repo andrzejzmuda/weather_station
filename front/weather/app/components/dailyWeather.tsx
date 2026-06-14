@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useRef, useState } from "react";
-import { extractDate, formatTimestampShort, roundToOneDecimal } from "./dataFormatter";
+import { extractDate, extractTime, formatTimestampShort, roundToOneDecimal } from "./dataFormatter";
 import { getWeatherIconByCode, getWeatherAnimation } from "./utils/weatherIconByCode";
 
 export default function DailyWeather({ daily }: { daily: any[] }) {
@@ -33,6 +33,23 @@ export default function DailyWeather({ daily }: { daily: any[] }) {
     scrollRef.current!.scrollLeft = scrollLeft - walk;
   }
 
+  function handleTouchStart(e: React.TouchEvent) {
+    setIsDown(true);
+    setStartX(e.touches[0].pageX - scrollRef.current!.offsetLeft);
+    setScrollLeft(scrollRef.current!.scrollLeft);
+  }
+
+  function handleTouchMove(e: React.TouchEvent) {
+    if (!isDown) return;
+    const x = e.touches[0].pageX - scrollRef.current!.offsetLeft;
+    const walk = (x - startX) * 1.2;
+    scrollRef.current!.scrollLeft = scrollLeft - walk;
+  }
+
+  function handleTouchEnd() {
+    setIsDown(false);
+  }
+
   return (
     <div className="w-full flex justify-center mt-6">
       <div
@@ -42,6 +59,9 @@ export default function DailyWeather({ daily }: { daily: any[] }) {
         onMouseLeave={handleMouseLeave}
         onMouseUp={handleMouseUp}
         onMouseMove={handleMouseMove}
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
       >
         <div className="inline-flex gap-3 w-max pr-3">
           {daily.map((d, index) => {
@@ -67,13 +87,17 @@ export default function DailyWeather({ daily }: { daily: any[] }) {
                 </div>
 
                 <div className="font-pixel text-[10px] space-y-1 leading-tight">
-                    <p>SUNRISE: <span className="text-[9px] text-atari-cyan">{formatTimestampShort(d.sunrise)}</span></p>
-                    <p>SUNSET: <span className="text-[9px] text-atari-cyan">{formatTimestampShort(d.sunset)}</span></p>
+                    <p>SUNRISE: <span className="text-[9px] text-atari-cyan">{extractTime(d.sunrise)}</span></p>
+                    <p>SUNSET: <span className="text-[9px] text-atari-cyan">{extractTime(d.sunset)}</span></p>
                     <p>TEMP MEAN: <span className="text-[9px] text-atari-cyan">{roundToOneDecimal(d.temperature_2m_mean)}°C</span></p>
                     <p>TEMP MIN: <span className="text-[9px] text-atari-cyan">{roundToOneDecimal(d.temperature_2m_min)}°C</span></p>
                     <p>TEMP MAX: <span className="text-[9px] text-atari-cyan">{roundToOneDecimal(d.temperature_2m_max)}°C</span></p>
-                    <p>RAIN SUM: <span className="text-[9px] text-atari-cyan">{roundToOneDecimal(d.rain_sum)} mm</span></p>
-                    <p>SNOW SUM: <span className="text-[9px] text-atari-cyan">{roundToOneDecimal(d.snowfall_sum)} mm</span></p>
+                    {d.rain_sum > 0 ? (
+                        <p>RAIN SUM: <span className="text-[9px] text-atari-cyan">{roundToOneDecimal(d.rain_sum)} mm</span></p>
+                    ) : null}
+                    {d.snowfall_sum > 0 ? (
+                        <p>SNOW SUM: <span className="text-[9px] text-atari-cyan">{roundToOneDecimal(d.snowfall_sum)} mm</span></p>
+                    ) : null}
                 </div>
               </div>
             );

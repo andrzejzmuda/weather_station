@@ -69,8 +69,12 @@ export default async function CurrentWeatherList({ geo_id }: { geo_id: number })
         <div className="space-y-2 font-pixel text-sm leading-relaxed">
           <p>TEMP: <span className="text-atari-cyan">{roundToOneDecimal(item.temperature_2m)}°C</span></p>
           <p>HUMIDITY: <span className="text-atari-yellow">{item.relative_humidity_2m}%</span></p>
+          {item.rain > 0 ?
           <p>RAIN: <span className="text-atari-cyan">{roundToOneDecimal(item.rain)} mm</span></p>
+          : null}
+          {item.snowfall > 0 ?
           <p>SNOW: <span className="text-atari-cyan">{roundToOneDecimal(item.snowfall)} mm</span></p>
+          : null}
           <p className="text-atari-yellow italic">{item.weather_description}</p>
         </div>
       </div>
