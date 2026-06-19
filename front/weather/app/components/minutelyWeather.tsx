@@ -6,10 +6,21 @@ import fetchWeather from "./queries/fetchWeather";
 import { extractTime, roundToOneDecimal } from "./utils/dataFormatter";
 import { getWeatherIconByCode, getWeatherAnimation } from "./utils/weatherIconByCode";
 
+interface MinutelyWeather {
+  id: number;
+  url: string;
+  date: string;
+  temperature_2m: number;
+  relative_humidity_2m: number;
+  rain: number;
+  snowfall: number;
+  weather_code: number;
+}
+
 
 export default function MinutelyWeather({ geo_id }: { geo_id: number }) {
 
-  const [minutelyList, setMinutelyList] = useState([]);
+  const [minutelyList, setMinutelyList] = useState<MinutelyWeather[]>([]);
   const url = "minutely15weather/"
   const intervalMinute = 300000 ; // 5 minutes
   const scrollRef = useRef<HTMLDivElement>(null);

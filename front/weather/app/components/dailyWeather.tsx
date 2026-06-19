@@ -6,9 +6,23 @@ import fetchWeather from "./queries/fetchWeather";
 import { extractDate, extractTime, roundToOneDecimal } from "./utils/dataFormatter";
 import { getWeatherIconByCode, getWeatherAnimation } from "./utils/weatherIconByCode";
 
+interface DailyWeather {
+  url: string;
+  date: string;
+  sunrise: string;
+  sunset: string;
+  temperature_2m_mean: number;
+  temperature_2m_min: number;
+  temperature_2m_max: number;
+  rain_sum: number;
+  snowfall_sum: number;
+  weather_code: number;
+}
+
+
 export default function DailyWeather({ geo_id }: { geo_id: number }) {
 
-  const [dailyList, setDailyList] = useState([]);
+  const [dailyList, setDailyList] = useState<DailyWeather[]>([]);
   const url = "dailyweather/";
   const intervalMinute = 3600000 // 1 hour;
   const scrollRef = useRef<HTMLDivElement>(null);

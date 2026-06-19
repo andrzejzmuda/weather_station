@@ -6,9 +6,19 @@ import fetchWeather from "./queries/fetchWeather";
 import { extractTime, roundToOneDecimal } from "./utils/dataFormatter";
 import { getWeatherIconByCode, getWeatherAnimation } from "./utils/weatherIconByCode";
 
+interface HourlyWeather {
+  url: string;
+  date: string;
+  rain: number;
+  snowfall: number;
+  temperature_2m: number;
+  relative_humidity_2m: number;
+  weather_code: number;
+}
+
 export default function HourlyWeather({ geo_id }: { geo_id: number }) {
 
-  const [hourlyList, setHourlyList] = useState([]);
+  const [hourlyList, setHourlyList] = useState<HourlyWeather[]>([]);
   const url = "hourlyweather/"
   const intervalMinute = 1800000 // 30 minutes;
   const scrollRef = useRef<HTMLDivElement>(null);
