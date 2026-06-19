@@ -1,15 +1,38 @@
 "use client";
 
 import Image from "next/image";
-import { useRef, useState } from "react";
-import { extractDate, extractTime, formatTimestampShort, roundToOneDecimal } from "./dataFormatter";
+import { useRef, useState, useEffect } from "react";
+import fetchWeather from "./queries/fetchWeather";
+import { extractDate, extractTime, roundToOneDecimal } from "./utils/dataFormatter";
 import { getWeatherIconByCode, getWeatherAnimation } from "./utils/weatherIconByCode";
 
-export default function DailyWeather({ daily }: { daily: any[] }) {
+export default function DailyWeather({ geo_id }: { geo_id: number }) {
+
+  const [dailyList, setDailyList] = useState([]);
+  const url = "dailyweather/";
+  const intervalMinute = 3600000 // 1 hour;
   const scrollRef = useRef<HTMLDivElement>(null);
   const [isDown, setIsDown] = useState(false);
   const [startX, setStartX] = useState(0);
   const [scrollLeft, setScrollLeft] = useState(0);
+
+  const daily = () => {
+      return fetchWeather({ url, geo_id });
+    };
+  
+    useEffect(() => {
+      if (!geo_id) return;
+  
+      async function load() {
+        const data = await daily();
+        setDailyList(data);
+      }
+      load();
+      const interval = setInterval(() => {
+        load();
+      }, intervalMinute);
+      return () => clearInterval(interval);
+    }, [geo_id]);
 
   function handleMouseDown(e: React.MouseEvent) {
     setIsDown(true);
@@ -64,13 +87,13 @@ export default function DailyWeather({ daily }: { daily: any[] }) {
         onTouchEnd={handleTouchEnd}
       >
         <div className="inline-flex gap-3 w-max pr-3">
-          {daily.map((d, index) => {
+          {dailyList.map((d) => {
             const icon = getWeatherIconByCode(d.weather_code);
             const anim = getWeatherAnimation(d.weather_code);
 
             return (
               <div
-                key={index}
+                key={d.url}
                 className="pixel-border bg-atari-black text-atari-white p-3 w-[150px] inline-block text-center"
               >
                 <div className="flex items-center gap-2 mb-1">

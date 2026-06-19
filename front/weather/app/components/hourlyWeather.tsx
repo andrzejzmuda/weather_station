@@ -1,15 +1,38 @@
 "use client";
 
 import Image from "next/image";
-import { useRef, useState } from "react";
-import { extractTime, roundToOneDecimal } from "./dataFormatter";
+import { useRef, useState, useEffect } from "react";
+import fetchWeather from "./queries/fetchWeather";
+import { extractTime, roundToOneDecimal } from "./utils/dataFormatter";
 import { getWeatherIconByCode, getWeatherAnimation } from "./utils/weatherIconByCode";
 
-export default function HourlyWeather({ hourly }: { hourly: any[] }) {
+export default function HourlyWeather({ geo_id }: { geo_id: number }) {
+
+  const [hourlyList, setHourlyList] = useState([]);
+  const url = "hourlyweather/"
+  const intervalMinute = 1800000 // 30 minutes;
   const scrollRef = useRef<HTMLDivElement>(null);
   const [isDown, setIsDown] = useState(false);
   const [startX, setStartX] = useState(0);
   const [scrollLeft, setScrollLeft] = useState(0);
+
+  const hourly = () => {
+    return fetchWeather({ url, geo_id });
+  };
+
+  useEffect(() => {
+    if (!geo_id) return;
+
+    async function load() {
+      const data = await hourly();
+      setHourlyList(data);
+    }
+    load();
+    const interval = setInterval(() => {
+      load();
+    }, intervalMinute);
+    return () => clearInterval(interval);
+  }, [geo_id]);
 
   function handleMouseDown(e: React.MouseEvent) {
     setIsDown(true);
@@ -64,13 +87,13 @@ export default function HourlyWeather({ hourly }: { hourly: any[] }) {
         onTouchEnd={handleTouchEnd}
       >
         <div className="inline-flex gap-3 w-max pr-3">
-          {hourly.map((h, index) => {
-            const icon = getWeatherIconByCode(h.weather_code);
-            const anim = getWeatherAnimation(h.weather_code);
+          {hourlyList.map((item) => {
+            const icon = getWeatherIconByCode(item.weather_code);
+            const anim = getWeatherAnimation(item.weather_code);
 
             return (
               <div
-                key={index}
+                key={item.url}
                 className="pixel-border bg-atari-black text-atari-white p-3 w-[150px] inline-block text-center"
               >
                 <div className="flex items-center gap-2 mb-1">
@@ -82,18 +105,18 @@ export default function HourlyWeather({ hourly }: { hourly: any[] }) {
                     className={anim}
                   />
                   <p className="text-[9px] text-atari-yellow font-pixel truncate">
-                    {extractTime(h.date)}
+                    {extractTime(item.date)}
                   </p>
                 </div>
 
                 <div className="font-pixel text-[10px] space-y-1 leading-tight">
-                  <p>TEMP: <span className="text-[9px] text-atari-cyan">{roundToOneDecimal(h.temperature_2m)}°C</span></p>
-                  <p>HUMID: <span className="text-[9px] text-atari-yellow">{h.relative_humidity_2m}%</span></p>
-                  {h.rain > 0 ? (
-                    <p>RAIN: <span className="text-[9px] text-atari-cyan">{roundToOneDecimal(h.rain)} mm</span></p>
+                  <p>TEMP: <span className="text-[9px] text-atari-cyan">{roundToOneDecimal(item.temperature_2m)}°C</span></p>
+                  <p>HUMID: <span className="text-[9px] text-atari-yellow">{item.relative_humidity_2m}%</span></p>
+                  {item.rain > 0 ? (
+                    <p>RAIN: <span className="text-[9px] text-atari-cyan">{roundToOneDecimal(item.rain)} mm</span></p>
                   ) : null}
-                  {h.snowfall > 0 ? (
-                    <p>SNOW: <span className="text-[9px] text-atari-cyan">{roundToOneDecimal(h.snowfall)} mm</span></p>
+                  {item.snowfall > 0 ? (
+                    <p>SNOW: <span className="text-[9px] text-atari-cyan">{roundToOneDecimal(item.snowfall)} mm</span></p>
                   ) : null}
                 </div>
               </div>

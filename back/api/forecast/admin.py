@@ -6,7 +6,26 @@ from .models import (WeatherCodes, GeoData, Cities, CurrentWeather,
 admin.site.register(WeatherCodes)
 admin.site.register(GeoData)
 admin.site.register(Cities)
-admin.site.register(CurrentWeather)
-admin.site.register(Minutely15Weather)
-admin.site.register(HourlyWeather)
-admin.site.register(DailyWeather)
+
+
+@admin.register(CurrentWeather)
+class CurrentWeatherAdmin(admin.ModelAdmin):
+    list_display = ('geo_id', 'temperature_2m', 'relative_humidity_2m')
+    search_fields = ('geo_id',)
+
+
+@admin.register(Minutely15Weather)
+class Minutely15WeatherAdmin(admin.ModelAdmin):
+    list_display = ('geo_id', 'timestamp', 'precipitation')
+    search_fields = ('geo_id',)
+
+
+@admin.register(HourlyWeather)
+class HourlyWeatherAdmin(admin.ModelAdmin):
+    list_display = ('geo_id', 'timestamp', 'temperature_2m', 'relative_humidity_2m')
+    search_fields = ('geo_id',)
+
+@admin.register(DailyWeather)
+class DailyWeatherAdmin(admin.ModelAdmin):
+    list_display = ('geo_id', 'timestamp', 'temperature_2m', 'relative_humidity_2m')
+    search_fields = ('geo_id',)

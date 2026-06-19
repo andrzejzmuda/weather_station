@@ -72,6 +72,10 @@ class CurrentWeather(models.Model):
         verbose_name = "CurrentWeather"
         verbose_name_plural = "CurrentWeather"
         app_label = "forecast"
+        indexes = [
+            models.Index(fields=['weather_timestamp']),
+            models.Index(fields=['geo_id']),
+            ]
 
 
 class Minutely15Weather(models.Model):
@@ -100,6 +104,10 @@ class Minutely15Weather(models.Model):
         verbose_name_plural = "Minutely15Weather"
         app_label = "forecast"
         unique_together = ('geo_id', 'date')
+        indexes = [
+            models.Index(fields=['date']),
+            models.Index(fields=['geo_id']),
+        ]
 
 
 class HourlyWeather(models.Model):
@@ -134,6 +142,10 @@ class HourlyWeather(models.Model):
         verbose_name_plural = "HourlyWeather"
         app_label = "forecast"
         unique_together = ('geo_id', 'date')
+        indexes = [
+            models.Index(fields=['date']),
+            models.Index(fields=['geo_id']),
+        ]
 
 
 class DailyWeather(models.Model):
@@ -174,3 +186,7 @@ class DailyWeather(models.Model):
         verbose_name_plural = "DailyWeather"
         app_label = "forecast"
         unique_together = ('geo_id', 'date')
+        indexes = [
+            models.Index(fields=['date']),
+            models.Index(fields=['geo_id']),
+        ]

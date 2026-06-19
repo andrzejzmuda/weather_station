@@ -4,8 +4,8 @@ import fetchWeather from "./queries/fetchWeather";
 import MinutelyWeather from "./minutelyWeather";
 import HourlyWeather from "./hourlyWeather";
 import DailyWeather from "./dailyWeather";
-import NavigationArrows from "./NavArrows";
-import { formatTimestamp, roundToOneDecimal } from "./dataFormatter";
+import NavigationArrows from "./utils/NavArrows";
+import { formatTimestamp, roundToOneDecimal } from "./utils/dataFormatter";
 import { getWeatherIconByCode, getWeatherAnimation } from "./utils/weatherIconByCode";
 
 
@@ -21,21 +21,6 @@ export default async function CurrentWeatherList({ geo_id }: { geo_id: number })
       </div>
     );
   }
-
-  const minutely = await fetchWeather({
-    url: "minutely15weather/",
-    geo_id: item.geo_id,
-  });
-
-  const hourly = await fetchWeather({
-    url: "hourlyweather/",
-    geo_id: item.geo_id,
-  });
-
-  const daily = await fetchWeather({
-    url: "dailyweather/",
-    geo_id: item.geo_id,
-  });
 
   const icon = getWeatherIconByCode(item.weather_code);
   const anim = getWeatherAnimation(item.weather_code);
@@ -80,9 +65,9 @@ export default async function CurrentWeatherList({ geo_id }: { geo_id: number })
       </div>
 
       {/* forecast panels */}
-      <MinutelyWeather minutely={minutely} />
-      <HourlyWeather hourly={hourly} />
-      <DailyWeather daily={daily} />
+      <MinutelyWeather geo_id={item.geo_id} />
+      <HourlyWeather geo_id={item.geo_id} />
+      <DailyWeather geo_id={item.geo_id} />
     </div>
   );
 }

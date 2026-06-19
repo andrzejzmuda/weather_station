@@ -1,0 +1,37 @@
+services:
+  django:
+    image: andrzejzmuda/weather-backend:latest
+    container_name: weather_backend
+    restart: always
+    command: gunicorn weather.wsgi:application --workers 1 --threads 2 --bind 0.0.0.0:8000
+    volumes:
+      - static_volume:/app/staticfiles
+      - /home/admin/weather_logs:/logs/weather
+    env_file:
+      - .env
+    expose:
+      - "8000"
+    deploy:
+      resources:
+        limits:
+          cpus: "0.50"
+          memory: 300M
+
+  nginx:
+    image: andrzejzmuda/nginx:latest
+    container_name: weather_nginx
+    restart: always
+    ports:
+      - "80:80"
+    volumes:
+      - static_volume:/app/staticfiles
+    depends_on:
+      - django
+    deploy:
+      resources:
+        limits:
+          cpus: "0.3"
+          memory: 100M
+
+volumes:
+  static_volume:
