@@ -16,16 +16,16 @@ class CurrentWeatherAdmin(admin.ModelAdmin):
 
 @admin.register(Minutely15Weather)
 class Minutely15WeatherAdmin(admin.ModelAdmin):
-    list_display = ('geo_id', 'timestamp', 'precipitation')
+    list_display = ('geo_id', 'date', 'precipitation')
     search_fields = ('geo_id',)
 
 
 @admin.register(HourlyWeather)
 class HourlyWeatherAdmin(admin.ModelAdmin):
-    list_display = ('geo_id', 'timestamp', 'temperature_2m', 'relative_humidity_2m')
+    list_display = ('geo_id', 'date', 'temperature_2m', 'relative_humidity_2m')
     search_fields = ('geo_id',)
 
 @admin.register(DailyWeather)
 class DailyWeatherAdmin(admin.ModelAdmin):
-    list_display = ('geo_id', 'timestamp', 'temperature_2m', 'relative_humidity_2m')
+    list_display = ('geo_id', 'date', 'temperature_2m_mean')
     search_fields = ('geo_id',)
