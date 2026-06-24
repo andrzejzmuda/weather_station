@@ -91,8 +91,8 @@ class Minutely15WeatherViewSet(viewsets.ModelViewSet):
         base_qs = Minutely15Weather.objects.all()
         if geo_id:
             base_qs = base_qs.filter(geo_id=geo_id)
-        latest_six = base_qs.order_by("-date")[:6]
-        qs = Minutely15Weather.objects.filter(id__in=latest_six).order_by("date")
+        latest = base_qs.order_by("-date")[:8]
+        qs = Minutely15Weather.objects.filter(id__in=latest).order_by("date")
         qs = qs.annotate(
             geo_city=Subquery(
                 Cities.objects.filter(id=OuterRef("geo_id")).values("name")[:1]
